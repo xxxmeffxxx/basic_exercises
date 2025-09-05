@@ -1,3 +1,4 @@
+
 # Задание 1
 # Дан список учеников, нужно посчитать количество повторений каждого имени ученика
 # Пример вывода:
@@ -5,6 +6,7 @@
 # Маша: 2
 # Петя: 2
 
+from collections import Counter
 students = [
     {'first_name': 'Вася'},
     {'first_name': 'Петя'},
@@ -13,7 +15,13 @@ students = [
     {'first_name': 'Петя'},
 ]
 # ???
-
+names = [student['first_name'] for student in students]
+print(names)
+students_uniq = Counter(names)
+print(students_uniq)
+for name, count in students_uniq.items():
+    print(f"{name}: {count}")
+print()
 
 # Задание 2
 # Дан список учеников, нужно вывести самое часто повторящееся имя
@@ -26,8 +34,11 @@ students = [
     {'first_name': 'Маша'},
     {'first_name': 'Оля'},
 ]
-# ???
 
+names = [student['first_name'] for student in students]
+students_uniq = Counter(names)
+most_name = students_uniq.most_common(1)[0][0]
+print(most_name)
 
 # Задание 3
 # Есть список учеников в нескольких классах, нужно вывести самое частое имя в каждом классе.
@@ -51,9 +62,13 @@ school_students = [
         {'first_name': 'Саша'},
     ],
 ]
-# ???
 
-
+for ind, group in enumerate(school_students):
+    names = [student['first_name'] for student in group]
+    students_uniq = Counter(names)
+    most_name = students_uniq.most_common(1)[0][0]
+    print(f"Самое частое имя в классе {ind+1}: {most_name}")
+print()
 # Задание 4
 # Для каждого класса нужно вывести количество девочек и мальчиков в нём.
 # Пример вывода:
@@ -72,8 +87,18 @@ is_male = {
     'Миша': True,
     'Даша': False,
 }
-# ???
 
+for class_group in school:
+    group = class_group['students']
+    b = 0
+    g = 0
+    for student in group:
+        if is_male[student['first_name']] == True:
+            b += 1
+        else:
+            g += 1
+    print(f"класс {class_group['class']}: девочки {g}, мальчики {b} ")
+print()
 
 # Задание 5
 # По информации о учениках разных классов нужно найти класс, в котором больше всего девочек и больше всего мальчиков
@@ -93,3 +118,18 @@ is_male = {
 }
 # ???
 
+for class_info in school:
+    students = class_info['students']
+    class_name = class_info['class']
+
+    b = sum(1 for student in students if is_male[student['first_name']] is True)
+    g = sum(1 for student in students if is_male[student['first_name']] is False)
+
+    class_info['girls'] = g
+    class_info['boys'] = b
+
+max_g_dict = max(school, key=lambda item: item["girls"])
+print(f"Больше всего девочек в классе {max_g_dict["class"]}")
+
+max_b_dict = max(school, key=lambda item: item["boys"])
+print(f"Больше всего мальчиков в классе {max_b_dict["class"]}")
